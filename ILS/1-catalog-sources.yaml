@@ -2,7 +2,7 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
   name: ibm-licensing-catalog
-  namespace: openshift-marketplace
+  namespace: ils
 spec:
   displayName: ibm-licensing-4.2.10
   publisher: IBM

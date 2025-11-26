@@ -18,6 +18,12 @@ USER 0
 #RUN dnf install -y procps-ng && dnf clean all
 USER 1000
 
-COPY --from=builder --chown=1000:0  $BUILD_DIR/target/*.*ar $BUILD_DIR
-COPY --from=builder --chown=1001:0 $BUILD_DIR/target/lib/*.*ar $BUILD_DIR
+ENV JAVA_OPTS="-cp lib/*:."
+ENV APIHOST=""
+ENV CMDBHOST=""
+ENV ITSMHOST=""
 
+COPY --from=builder --chown=1000:0  $BUILD_DIR/target/*.*ar $BUILD_DIR/lib
+COPY --from=builder --chown=1001:0 $BUILD_DIR/target/lib/*.*ar $BUILD_DIR/lib
+
+ENTRYPOINT ["/bin/sh", "-c", "java $JAVA_OPTS -jar apiILS.jar $APIHOST $CMDBHOST $ITSMHOST"]

@@ -1,4 +1,4 @@
-FROM maven:3.9.11-ibm-semeru-25-noble as builder
+FROM maven:3.9.11-ibm-semeru-25-noble AS builder
 ARG BUILD_DIR=/home/ubuntu
 WORKDIR $BUILD_DIR
 
@@ -6,24 +6,17 @@ USER 1000
 #ENV http_proxy=http://172.17.0.1:3128
 #RUN cd /build/$APP && mvn dependency:go-offline -B
 
-RUN mvn dependency:go-offline
 COPY --chown=1000:0 . $BUILD_DIR
-
+RUN pwd && ls
 RUN mvn  clean package -DskipTests
 
 FROM ibm-semeru-runtimes:open-25-jre-noble
-ARG APP
-ARG TLS=true
-USER 0
-#RUN dnf install -y procps-ng && dnf clean all
+ARG BUILD_DIR=/home/ubuntu
 USER 1000
+RUN chmod 755 /home/ubuntu
 
-ENV JAVA_OPTS="-cp lib/*:."
-ENV APIHOST=""
-ENV CMDBHOST=""
-ENV ITSMHOST=""
+COPY --from=builder --chown=1000:0  $BUILD_DIR/target/*.*ar $BUILD_DIR/lib/
+COPY --from=builder --chown=1000:0 $BUILD_DIR/target/lib/*.*ar $BUILD_DIR/lib/
+COPY --from=builder --chown=1000:0 $BUILD_DIR/entrypoint.sh $BUILD_DIR/
+COPY --from=builder --chown=1000:0 $BUILD_DIR/exec.sh $BUILD_DIR/
 
-COPY --from=builder --chown=1000:0  $BUILD_DIR/target/*.*ar $BUILD_DIR/lib
-COPY --from=builder --chown=1001:0 $BUILD_DIR/target/lib/*.*ar $BUILD_DIR/lib
-
-ENTRYPOINT ["/bin/sh", "-c", "java $JAVA_OPTS -jar apiILS.jar $APIHOST $CMDBHOST $ITSMHOST"]

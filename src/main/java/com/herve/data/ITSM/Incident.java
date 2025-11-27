@@ -1,21 +1,13 @@
 package com.herve.data.ITSM;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.herve.Util;
 
 public class Incident {
@@ -56,7 +48,7 @@ public class Incident {
         String title = (comment == null)
                 ? "No or wrong assertion(s)"
                 : comment;
-
+        setTitle(title);
         setPayload();
 
         Util.post(uri, payload);
@@ -69,7 +61,7 @@ public class Incident {
         // .com","project":"app2",
         // "status":"Open","truncDescription":"IBM software detected but no
         // annotations"}
-        if (jIncident == null ) {
+        if (jIncident == null) {
             setTid(null);
             setOpened_date(null);
             setClosed_date(null);
@@ -108,6 +100,14 @@ public class Incident {
         setClosed_date(" ");
         setPayload();
         return Util.put(getUri(), getPayload());
+    }
+
+    public void setPayload() {
+        this.payload = "{\"checked\":\"false\",\"id\":" + getTid() +
+                ",\"title\":\"" + title +
+                "\",\"description\":\"" + getComment() + "\",\"project\":\"" + getProject() +
+                "\",\"ownerEmail\":\"" + getOwnerEmail() + "\",\"openingDate\":\"" + getOpened_date() +
+                "\",\"closedDate\":\" \",\"status\":\"" + getStatus() + "\"}";
     }
 
     private void setStatus(String string) {
@@ -192,14 +192,6 @@ public class Incident {
 
     public String getPayload() {
         return payload;
-    }
-
-    public void setPayload() {
-        this.payload = "{\"checked\":\"false\",\"id\":" + getTid() +
-                ",\"title\":\"" + title +
-                "\",\"description\":\"" + getComment() + "\",\"project\":\"" + getProject() +
-                "\",\"ownerEmail\":\"" + getOwnerEmail() + "\",\"openingDate\":\"" + getOpened_date() +
-                "\",\"closedDate\":\" \",\"status\":\"" + getStatus() + "\"}";
     }
 
 }

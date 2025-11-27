@@ -1,11 +1,10 @@
 package com.herve.data.Workload;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.herve.data.CustomColumn.CustomColumns;
 import com.herve.data.Workload.Container.Containers;
+import com.herve.Util;
 
 public class Workload {
     private int id;
@@ -24,35 +23,17 @@ public class Workload {
     private CustomColumns customColumns;
 
     public Workload(JsonObject jWorkload) {
-        setId((int) this.map(jWorkload, "id", "int"));
-        setKind((String) this.map(jWorkload, "kind", "String"));
-        setName((String) this.map(jWorkload, "name", "String"));
-        setNamespace((String) this.map(jWorkload, "namespace", "String"));
-        setClusterId((String) this.map(jWorkload, "clusterId", "String"));
-        setClusterName((String) this.map(jWorkload, "clusterName", "String"));
-        setChargebackGroupName((String) this.map(jWorkload, "chargedbackGroupName", "String"));
-        setReplicas((String) this.map(jWorkload, "replicas", "String"));
-        setContainers((JsonArray) this.map(jWorkload, "containers", "JsonArray"));
-        setAnnotations((String) this.map(jWorkload, "annotations", "String"));
-        setCustomColumns((JsonArray) this.map(jWorkload, "customColumns", "JsonArray"));
-    }
-
-    Object map(JsonObject jobj, String name, String type) {
-        JsonElement jsonElement = jobj.get(name);
-        if (jsonElement instanceof JsonNull || jsonElement == null) {
-            return null;
-        } else {
-            if (type == "String") {
-                return jsonElement.getAsString();
-            } else if (type == "int") {
-                return jsonElement.getAsInt();
-            } else if (type == "Boolean") {
-                return jsonElement.getAsBoolean();
-            } else if (type == "JsonArray") {
-                return jsonElement.getAsJsonArray();
-            }
-        }
-        return null;
+        setId((int) Util.map(jWorkload, "id", "int"));
+        setKind((String) Util.map(jWorkload, "kind", "String"));
+        setName((String) Util.map(jWorkload, "name", "String"));
+        setNamespace((String) Util.map(jWorkload, "namespace", "String"));
+        setClusterId((String) Util.map(jWorkload, "clusterId", "String"));
+        setClusterName((String) Util.map(jWorkload, "clusterName", "String"));
+        setChargebackGroupName((String) Util.map(jWorkload, "chargedbackGroupName", "String"));
+        setReplicas((String) Util.map(jWorkload, "replicas", "String"));
+        setContainers((JsonArray) Util.map(jWorkload, "containers", "JsonArray"));
+        setAnnotations((String) Util.map(jWorkload, "annotations", "String"));
+        setCustomColumns((JsonArray) Util.map(jWorkload, "customColumns", "JsonArray"));
     }
 
     public CustomColumns getCustomColumns() {

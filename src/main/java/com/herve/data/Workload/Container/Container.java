@@ -5,8 +5,9 @@ import java.util.List;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+
+import com.herve.Util;
 
 public class Container {
     private String name;
@@ -15,29 +16,12 @@ public class Container {
     private List<Component> components;
 
     public Container(JsonObject jContainer) {
-        setName((String) this.map(jContainer, "name", "String"));
-        setImage((String) this.map(jContainer, "image", "String"));
-        setCharged((Boolean) this.map(jContainer, "charged", "Boolean"));
-        setComponents((JsonArray) this.map(jContainer, "components", "JsonArray"));
+        setName((String) Util.map(jContainer, "name", "String"));
+        setImage((String) Util.map(jContainer, "image", "String"));
+        setCharged((Boolean) Util.map(jContainer, "charged", "Boolean"));
+        setComponents((JsonArray) Util.map(jContainer, "components", "JsonArray"));
     }
 
-    Object map(JsonObject jobj, String name, String type) {
-        JsonElement jsonElement = jobj.get(name);
-        if (jsonElement instanceof JsonNull || jsonElement == null) {
-            return null;
-        } else {
-            if (type == "String") {
-                return jsonElement.getAsString();
-            } else if (type == "int") {
-                return jsonElement.getAsInt();
-            } else if (type == "Boolean") {
-                return jsonElement.getAsBoolean();
-            } else if (type == "JsonArray") {
-                return jsonElement.getAsJsonArray();
-            }
-        }
-        return null;
-    }
 
     public String getName() {
         return name;

@@ -1,30 +1,15 @@
 package com.herve;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.herve.data.Constants;
@@ -46,8 +31,7 @@ public class CronWLs {
         boolean debug = ("true".equalsIgnoreCase(System.getenv("DEBUG"))) ? true : false;
         boolean bouchon = ("true".equalsIgnoreCase(System.getenv("BOUCHON"))) ? true : false;
 
-        CronWLs wls = new CronWLs();
-        String token = Util.getToken("token.txt");
+        String token = Util.getToken("lsrtoken/token");
         if (debug)
             System.out.println("CronWLS:main() token=" + token);
         String apiHost = args[0];
@@ -74,8 +58,8 @@ public class CronWLs {
                     .withZone(ZoneId.of("Europe/Paris"))
                     .format(Instant.now());
 
-            fileWorkloads = idt + "-workloads.json";
-            fileCustomColumns = idt + "-customColumns.json";
+            fileWorkloads = "workloads/" + idt + "-workloads.json";
+            fileCustomColumns = "workloads/" +idt + "-customColumns.json";
             jaWorkloads = Util.download("https://" + apiHost + "/workloads?token=" + token, fileWorkloads);
             jaCMDBs = Util.download("https://" + cmdbHost + "/v2/cmdbs", fileCmdb);
             jaCColumns = Util.download("https://" + apiHost + "/custom_columns?token=" + token, fileCustomColumns);
@@ -208,6 +192,8 @@ public class CronWLs {
                             customColumnIDs.getColumnID(Constants.COLUMN_CHARGED), charged);
                     Util.persist_data_customColumns(apiHost, token, recordID,
                             customColumnIDs.getColumnID(Constants.COLUMN_RECID), String.valueOf(recordID));
+                    Util.clear_data_customColumns(apiHost, token, recordID,
+                            customColumnIDs.getColumnID(Constants.COLUMN_SAM_STATUS));
                 }
 
                 if (ticketID != null) {

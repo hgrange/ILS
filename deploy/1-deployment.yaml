@@ -109,6 +109,8 @@ spec:
             volumeMounts:
             - mountPath: /data
               name: data
+          restartPolicy: OnFailure
+          schedulerName: default-scheduler
           volumes:
           - name: data
             persistentVolumeClaim:

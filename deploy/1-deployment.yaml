@@ -109,6 +109,8 @@ spec:
             volumeMounts:
             - mountPath: /data
               name: data
+            - mountPath: /data/lsrtoken
+              name: lsrtoken
           restartPolicy: OnFailure
           schedulerName: default-scheduler
           volumes:

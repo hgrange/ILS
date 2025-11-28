@@ -119,8 +119,6 @@ spec:
             secret:
               defaultMode: 420
               secretName: ibm-license-service-reporter-token
-          imagePullSecrets:
-          - name : quayio-secret
           serviceAccount: itsm
           serviceAccountName: itsm
   schedule: '*/1 * * * *'

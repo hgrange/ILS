@@ -96,6 +96,11 @@ public class CronWLs {
                 if (debug)
                     System.out.println("ticketID = " + ticketID);
 
+                String samStatus = (String) customColumns
+                        .getCustomColumnValue(Constants.COLUMN_SAM_STATUS);
+                if (debug)
+                    System.out.println("samStatus = " + samStatus);
+
                 String remediationNeeded = (String) customColumns
                         .getCustomColumnValue(Constants.COLUMN_SAM_REMEDIATION_NEEDED);
                 if (debug)
@@ -141,8 +146,10 @@ public class CronWLs {
                                 charged);
                         Util.clear_data_customColumns(apiHost, token, recordID,
                                 customColumnIDs.getColumnID(Constants.COLUMN_SAM_REMEDIATION_NEEDED));
-                        Util.clear_data_customColumns(apiHost, token, recordID,
+                        if ( samStatus != null) {
+                            Util.clear_data_customColumns(apiHost, token, recordID,
                                 customColumnIDs.getColumnID(Constants.COLUMN_SAM_STATUS));
+                            }
 
                     } else {
                         // ASM asks the ticket to be reopened, if the ticket is already created, the
@@ -192,8 +199,12 @@ public class CronWLs {
                             customColumnIDs.getColumnID(Constants.COLUMN_CHARGED), charged);
                     Util.persist_data_customColumns(apiHost, token, recordID,
                             customColumnIDs.getColumnID(Constants.COLUMN_RECID), String.valueOf(recordID));
-                    Util.clear_data_customColumns(apiHost, token, recordID,
+                    if ( samStatus != null  ) {
+                        if (debug)
+                            System.out.println("Clear Sam Status as no remediation is needed"); 
+                        Util.clear_data_customColumns(apiHost, token, recordID,
                             customColumnIDs.getColumnID(Constants.COLUMN_SAM_STATUS));
+                    }
                 }
 
                 if (ticketID != null) {

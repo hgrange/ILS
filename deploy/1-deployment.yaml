@@ -113,3 +113,13 @@ spec:
           - name: data
             persistentVolumeClaim:
               claimName: itsm-cronjob
+          - name: lsrtoken
+            secret:
+              defaultMode: 420
+              secretName: ibm-license-service-reporter-token
+          imagePullSecrets:
+          - name : quayio-secret
+  schedule: '*/1 * * * *'
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  suspend: false

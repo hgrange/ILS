@@ -110,6 +110,6 @@ spec:
             - mountPath: /data
               name: data
           volumes:
-          - name: db
+          - name: data
             persistentVolumeClaim:
-              claimName: itsm-db
+              claimName: itsm-cronjob
